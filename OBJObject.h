@@ -32,9 +32,9 @@ class OBJObject
 private:
 	vector<glm::vec3> ctrlPts;
 	vector<glm::vec3> segmentPts;
+	vector<glm::vec3> anchorPts;
 
 	glm::mat4 originalWorld;
-	float angle;
 
 public:
 	OBJObject();
@@ -42,13 +42,15 @@ public:
 
 	glm::mat4 toWorld;
 
+	//vector<glm::vec3> colors;
+
 	void calculatePoints();	// Taken from P1
 	void OBJObject::multMatrices(glm::mat4 basisM, glm::mat4x3 ctrlPoints);
 	void draw(GLuint);
 
 	// These variables are needed for the shader program
-	GLuint VBO, VAO;
-	GLuint uProjection, uModelview, color, uModel, uView;
+	GLuint VBO, VBO2, VBO3, VAO, VAO2, VAO3;
+	GLuint uProjection, uModelview, uColor, uModel, uView, uChoice;
 };
 
 #endif
