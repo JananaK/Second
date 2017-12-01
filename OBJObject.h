@@ -33,6 +33,11 @@ private:
 	vector<glm::vec3> ctrlPts;
 	vector<glm::vec3> segmentPts;
 	vector<glm::vec3> anchorPts;
+	vector<glm::vec3> handlePts;
+
+	std::vector<unsigned int> indices;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
 
 	glm::mat4 originalWorld;
 
@@ -47,9 +52,12 @@ public:
 	void calculatePoints();	// Taken from P1
 	void OBJObject::multMatrices(glm::mat4 basisM, glm::mat4x3 ctrlPoints);
 	void draw(GLuint);
+	void parse(const char* filepath);
+	void render();
 
 	// These variables are needed for the shader program
-	GLuint VBO, VBO2, VBO3, VAO, VAO2, VAO3;
+	GLuint VBO, VBO2, VBO3, VBO4;
+	GLuint VAO, VAO2, VAO3, VAO4;
 	GLuint uProjection, uModelview, uColor, uModel, uView, uChoice;
 };
 

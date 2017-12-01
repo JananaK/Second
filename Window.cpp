@@ -38,17 +38,10 @@ glm::vec2 Window::curr_pos(0, 0);
 glm::mat4 Window::Projection;
 glm::mat4 Window::View;
 
-// Light* light_ptr;
-// Light dir_light(0);
-// Light point_light(1);
-
 void Window::initialize_objects()
 {
 	skybox = new Cube();
 	object = new OBJObject();
-	//object = new OBJObject("bunny.obj");
-	//object = new OBJObject("bear.obj");
-	//object = new OBJObject("dragon.obj");
 
 	// Load the shader program. Make sure you have the correct filepath up top
 	skyboxShader = LoadShaders(SKYBOX_VERTEX_SHADER, SKYBOX_FRAGMENT_SHADER);
@@ -141,6 +134,10 @@ void Window::display_callback(GLFWwindow* window)
 {
 	// Clear the color and depth buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Set the matrix mode to GL_MODELVIEW
+	glMatrixMode(GL_MODELVIEW);
+	// Load the identity matrix
+	glLoadIdentity();
 
 	// Use the shader of programID
 	glUseProgram(skyboxShader);
@@ -150,6 +147,8 @@ void Window::display_callback(GLFWwindow* window)
 
 	// Render the cube
 	object->draw(bezierShader);
+	// Render objects
+	//object->render();	// Render the object
 
 	// Gets events, including input such as keyboard and mouse or window resizing
 	glfwPollEvents();
@@ -214,30 +213,6 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
 		if (key == GLFW_KEY_J)
 		{
 			object->centerScale();
-		}
-
-		// Check if 'R' was pressed, resets orientation and scale factor
-		if (key == GLFW_KEY_R && mods & GLFW_MOD_SHIFT)
-		{
-			object->reset();
-			Scale = glm::vec3(1.0f, 1.0f, 1.0f);	// resets scaling
-			degree = 0;					// resets orbit degree
-			spinDegree = 0;				// resets spin degree
-			Rotate = glm::vec3(1.0f, 1.0f, 1.0f);
-		}
-
-		// Check if 'r' was pressed, resets position
-		else if (key == GLFW_KEY_R)
-		{
-			object->reset1();
-			Translation = glm::vec3(0, 0, 0);		// resets location
-		}
-
-		// Check if escape was pressed
-		if (key == GLFW_KEY_ESCAPE)
-		{
-			// Close the window. This causes the program to also terminate.
-			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
 	}*/
 }
@@ -339,20 +314,6 @@ void Window::cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 			prev_pos = curr_pos;
 		}
 	}
-
-	/*else if (rightMouseIsClicked)
-	{
-		// Get 3D point for curr_pos
-		glfwGetCursorPos(window, &xpos, &ypos);
-		curr_pos = glm::vec2(xpos, ypos);
-		glm::vec3 wVector = trackBallMapping(glm::vec3(curr_pos.x, curr_pos.y, 0));
-
-		float s = 0.04f;
-
-		// Move object along x-y plane
-		object->translate(glm::vec3((curr_pos.x - prev_pos.x) * s, (prev_pos.y - curr_pos.y) * s, 0.0f));	// On Piazza Post #323
-		prev_pos = curr_pos;
-	}*/
 }
 
 glm::vec3 Window::trackBallMapping(glm::vec3 point)
