@@ -49,7 +49,7 @@ public:
 	void spin(float);
 
 	// These variables are needed for the shader program
-	GLuint cubeVAO, cubeVBO;
+	// GLuint cubeVAO, cubeVBO;
 	GLuint skyboxVBO, skyboxVAO;
 	GLuint uProjection, uView;
 };

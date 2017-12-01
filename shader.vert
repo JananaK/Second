@@ -1,14 +1,15 @@
-// TAKEN FROM LINKS ON THE HW PAGE: https://learnopengl.com/#!Advanced-OpenGL/Cubemaps
+/// TAKEN FROM LINKS ON THE HW PAGE: https://learnopengl.com/code_viewer.php?code=lighting/lighting_maps&type=vertex
 #version 330 core
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in vec3 position;
 
-out vec3 textureDir;
+out vec3 FragPos;
 
+uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
 void main()
 {
-    textureDir = aPos;
-    gl_Position = projection * view * vec4(aPos, 1.0);
+    gl_Position = projection * view * model * vec4(position, 1.0f);
+    FragPos = vec3(model * vec4(position, 1.0f));
 }

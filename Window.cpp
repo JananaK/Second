@@ -4,10 +4,14 @@ const char* window_title = "GLFW Starter Project";
 Cube * skybox;
 OBJObject * object;
 GLint Window::skyboxShader;
+GLint Window::bezierShader;
 
 // On some systems you need to change this to the absolute path
-#define SKYBOX_VERTEX_SHADER "/Users/janic/Documents/CSE167StarterCode3-master/shader.vert"
-#define SKYBOX_FRAGMENT_SHADER "/Users/janic/Documents/CSE167StarterCode3-master/shader.frag"
+#define SKYBOX_VERTEX_SHADER "/Users/janic/Documents/CSE167StarterCode3-master/skybox_shader.vert"
+#define SKYBOX_FRAGMENT_SHADER "/Users/janic/Documents/CSE167StarterCode3-master/skybox_shader.frag"
+
+#define VERTEX_SHADER "/Users/janic/Documents/CSE167StarterCode3-master/shader.vert"
+#define FRAGMENT_SHADER "/Users/janic/Documents/CSE167StarterCode3-master/shader.frag"
 
 // Default camera parameters
 glm::vec3 cam_pos(0.0f, 0.0f, 20.0f);		// e  | Position of camera
@@ -17,6 +21,7 @@ glm::vec3 cam_up(0.0f, 1.0f, 0.0f);			// up | What orientation "up" is
 glm::vec3 Window::Translation(0, 0, 0);		// keeps track of location
 glm::vec3 Window::Scale(1.0f, 1.0f, 1.0f);	// keeps track of scaling and orientation
 glm::vec3 Window::Rotate(1.0f, 1.0f, 1.0f);
+glm::vec4 Window::black(0.0f, 0.0f, 0.0f, 0.0f);
 
 float Window::degree = 0;					// keeps track of orbit degree
 float Window::spinDegree = 0;				// keeps track of spin degree
@@ -40,19 +45,23 @@ glm::mat4 Window::View;
 void Window::initialize_objects()
 {
 	skybox = new Cube();
+	object = new OBJObject();
 	//object = new OBJObject("bunny.obj");
 	//object = new OBJObject("bear.obj");
 	//object = new OBJObject("dragon.obj");
 
 	// Load the shader program. Make sure you have the correct filepath up top
 	skyboxShader = LoadShaders(SKYBOX_VERTEX_SHADER, SKYBOX_FRAGMENT_SHADER);
+	bezierShader = LoadShaders(VERTEX_SHADER, FRAGMENT_SHADER);
 }
 
 // Treat this as a destructor function. Delete dynamically allocated memory here.
 void Window::clean_up()
 {
+	delete(skybox);
 	delete(object);
 	glDeleteProgram(skyboxShader);
+	glDeleteProgram(bezierShader);
 }
 
 GLFWwindow* Window::create_window(int width, int height)
@@ -135,22 +144,23 @@ void Window::display_callback(GLFWwindow* window)
 
 	// Use the shader of programID
 	glUseProgram(skyboxShader);
-	
-	// Render the cube
 	skybox->draw(skyboxShader);
 
-	//object->draw(skyboxShader);
+	glUseProgram(bezierShader);
+
+	// Render the cube
+	object->draw(bezierShader);
 
 	// Gets events, including input such as keyboard and mouse or window resizing
 	glfwPollEvents();
-	// Swap buffers
+
 	glfwSwapBuffers(window);
 }
 
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	// Check for a key press
-	if (action == GLFW_PRESS)
+	/*if (action == GLFW_PRESS)
 	{
 		// Check if 'X' was pressed, moves right
 		if (key == GLFW_KEY_X && mods & GLFW_MOD_SHIFT)
@@ -229,7 +239,7 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
 			// Close the window. This causes the program to also terminate.
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
-	}
+	}*/
 }
 
 void Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
@@ -298,7 +308,7 @@ void Window::cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 			rotAxis = glm::cross(prevVector, currVector);
 			rotAxis = glm::normalize(rotAxis);
 
-			velocity = velocity * 1.05;
+			rotAngle = velocity * 1.05;
 
 			// Calculate angle between vectors:
 			/*rotAngle = (glm::dot(prevVector, currVector));
@@ -307,18 +317,19 @@ void Window::cursor_pos_callback(GLFWwindow* window, double xpos, double ypos)
 			if (rotAngle < 0.0f) rotAngle = 0.0f;
 
 			rotAngle /= (glm::length(prevVector) * glm::length(currVector));
-			rotAngle = glm::acos(rotAngle) * 1.05f;*/
+			rotAngle = glm::acos(rotAngle);*/
 
-			if (camPosition.z < 0)
+			/*if (camPosition.z < 0)
 			{
 				//velocity = -1 * velocity;
-				rotAxis = glm::cross(currVector, prevVector);
-				rotAxis = glm::normalize(rotAxis);
-			}
+				//rotAxis = glm::cross(currVector, prevVector);
+				//rotAxis = glm::normalize(rotAxis);
+
+			}*/
 
 			//cerr << "rotAngle: " << rotAngle << endl;
 
-			camPosition = glm::rotate(glm::mat4(1.0f), velocity, rotAxis) * camPosition;
+			camPosition = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis) * camPosition;
 			//camDirection = glm::rotate(glm::mat4(1.0f), velocity, rotAxis) * camDirection;
 
 			cam_pos = glm::vec3(camPosition.x, camPosition.y, camPosition.z);
@@ -364,5 +375,5 @@ glm::vec3 Window::trackBallMapping(glm::vec3 point)
 void Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	// Move object along z plane
-	object->translate(glm::vec3(0.0f, 0.0f, xoffset - yoffset));
+	// object->translate(glm::vec3(0.0f, 0.0f, xoffset - yoffset));
 }

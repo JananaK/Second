@@ -24,36 +24,31 @@
 
 #include "Light.h"
 
+using namespace std;
+
 class OBJObject
 {
 // Private variables copied from Project 1
 private:
-	std::vector<GLuint> indicesOBJ;
-	std::vector<glm::vec3> verticesOBJ;
-	std::vector<glm::vec3> normalsOBJ;
+	vector<glm::vec3> ctrlPts;
+	vector<glm::vec3> segmentPts;
+
 	glm::mat4 originalWorld;
 	float angle;
 
 public:
-	OBJObject(const char* filepath);
+	OBJObject();
 	~OBJObject();
 
 	glm::mat4 toWorld;
 
-	void makeMaterial(int type);
-	void parse(const char* filepath);	// Taken from P1
+	void calculatePoints();	// Taken from P1
+	void OBJObject::multMatrices(glm::mat4 basisM, glm::mat4x3 ctrlPoints);
 	void draw(GLuint);
-	void translate(glm::vec3 translateVector);
-	void scale(glm::vec3 scaleVector);
-	void update();
-	void spin(float, glm::vec3);
-	void centerScale();
-	void reset();
-	void reset1();
 
 	// These variables are needed for the shader program
-	GLuint VBO, VAO, EBO, VBO2;
-	GLuint uProjection, uModelview, normals, uModel, uView;
+	GLuint VBO, VAO;
+	GLuint uProjection, uModelview, color, uModel, uView;
 };
 
 #endif

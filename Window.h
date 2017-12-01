@@ -51,8 +51,13 @@ public:
 	static glm::vec3 Scale;
 	static glm::vec3 Rotate;
 
-	static GLint shaderProgram;
+	//static GLint shaderProgram;
 	static GLint skyboxShader;
+
+	static glm::vec4 black;
+
+	//static GLint bezierProgram;
+	static GLint bezierShader;
 
 	static void initialize_objects();
 	static void clean_up();

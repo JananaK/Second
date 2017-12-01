@@ -1,11 +1,13 @@
 #version 330 core
-out vec4 FragColor;
 
-in vec3 textureDir;			// direction vector representing a 3D texture coordinate
-uniform samplerCube skybox; //// cubemap texture sampler
-//uniform sampler2D textureunit;
+// Inputs to the fragment shader are the outputs of the same name from the vertex shader.
+// Note that you do not have access to the vertex shader's default output, gl_Position.
+// in vec3 Color;
+
+// You can output many things. The first vec4 type output determines the color of the fragment
+out vec4 color;
 
 void main()
-{    
-    FragColor = texture(skybox, textureDir);
+{
+	color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 }
